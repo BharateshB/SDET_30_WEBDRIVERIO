@@ -24,9 +24,16 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        // './test/specs/**/*.js'
         // './test/specs/demoTestScript.js'
+        // ["./test/specs/example.e2e.js", "./test/specs/launchBrowser.js"],
+        "./test/specs/demoTc01.js","./test/specs/demoTc02.js","./test/specs/demoTc03.js"
     ],
+    suites : {
+        smokeSuite : ["./test/specs/example.e2e.js", "./test/specs/launchBrowser.js"],
+        regressionSuite : ["./test/specs/demoTc01.js","./test/specs/demoTc02.js","./test/specs/demoTc03.js"]
+
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -68,6 +75,11 @@ exports.config = {
                 // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
                 // excludeDriverLogs: ['bugreport', 'server'],
         },
+        // {
+        //     maxInstances : 1,
+        //     browserName: "firefox",
+        //     acceptInsecureCerts: true
+        // }
     // {maxInstances : 1,browserName : "firefox"}
     ],
     //
@@ -117,7 +129,10 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver'],
+    services: [
+        'chromedriver'
+        // ['selenium-standalone']
+    ],
     
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -148,7 +163,7 @@ exports.config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: 999999999999999999
     },
     //
     // =====
@@ -271,7 +286,7 @@ exports.config = {
      */
     //====================== afterEach()
     afterTest:async function(test, context, { error, result, duration, passed, retries }) {
-        await hp.logoutFromApplication()
+        // await hp.logoutFromApplication()
         console.log("logout from the apllication");
     },
 
