@@ -26,7 +26,7 @@ exports.config = {
     //
     specs: [
         // './test/specs/**/*.js'
-         './test/specs/demoTestScript.js'
+         "./test/specs/demoTestScript.js",
         "./test/specs/example.e2e.js"
         // ["./test/specs/example.e2e.js", "./test/specs/launchBrowser.js"],
         // "./test/specs/demoTc01.js","./test/specs/demoTc02.js","./test/specs/demoTc03.js"
