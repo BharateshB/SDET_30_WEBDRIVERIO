@@ -1,5 +1,6 @@
 let hp = require("./test/pageobjects/vtigerHomePage")
 let lp = require("./test/pageobjects/vtigerLoginPage")
+const video = require('wdio-video-reporter');
 
 exports.config = {
     //
@@ -26,8 +27,9 @@ exports.config = {
     specs: [
         // './test/specs/**/*.js'
         // './test/specs/demoTestScript.js'
+        "./test/specs/example.e2e.js"
         // ["./test/specs/example.e2e.js", "./test/specs/launchBrowser.js"],
-        "./test/specs/demoTc01.js","./test/specs/demoTc02.js","./test/specs/demoTc03.js"
+        // "./test/specs/demoTc01.js","./test/specs/demoTc02.js","./test/specs/demoTc03.js"
     ],
     suites : {
         smokeSuite : ["./test/specs/example.e2e.js", "./test/specs/launchBrowser.js"],
@@ -61,25 +63,25 @@ exports.config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [
-            {
+        //     {
     
-                // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-                // grid with only 5 firefox instances available you can make sure that not more than
-                // 5 instances get started at a time.
-                maxInstances: 1,
-                //
-                browserName: 'chrome',
-                acceptInsecureCerts: true
-                // If outputDir is provided WebdriverIO can capture driver session logs
-                // it is possible to configure which logTypes to include/exclude.
-                // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-                // excludeDriverLogs: ['bugreport', 'server'],
-        },
-        // {
-        //     maxInstances : 1,
-        //     browserName: "firefox",
-        //     acceptInsecureCerts: true
-        // }
+        //         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+        //         // grid with only 5 firefox instances available you can make sure that not more than
+        //         // 5 instances get started at a time.
+        //         maxInstances: 1,
+        //         //
+        //         browserName: 'chrome',
+        //         acceptInsecureCerts: true
+        //         // If outputDir is provided WebdriverIO can capture driver session logs
+        //         // it is possible to configure which logTypes to include/exclude.
+        //         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
+        //         // excludeDriverLogs: ['bugreport', 'server'],
+        // },
+        {
+            maxInstances : 1,
+            browserName: "firefox",
+            acceptInsecureCerts: true
+        }
     // {maxInstances : 1,browserName : "firefox"}
     ],
     //
@@ -130,8 +132,8 @@ exports.config = {
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
     services: [
-        'chromedriver'
-        // ['selenium-standalone']
+        // 'chromedriver'
+        ['selenium-standalone']
     ],
     
     // Framework you want to run your specs with.
@@ -154,7 +156,17 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: ['spec',
+        // [video, {
+        //     saveAllVideos: false,       // If true, also saves videos for successful test cases
+        //     videoSlowdownMultiplier: 3, // Higher to get slower videos, lower for faster videos [Value 1-100]
+        // }],
+        ['allure', {
+            outputDir: './_results_/allure-raw',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+        }],
+    ],
 
 
     
@@ -254,7 +266,7 @@ exports.config = {
      */
     //========================= beforeEach()
     beforeTest:async function (test, context) {
-        await lp.loginToApplication("admin", "admin")
+        // await lp.loginToApplication("admin", "admin")
 
         // await browser.url("http://localhost:8888/")
         // await $("//input[@name = 'user_name']").setValue("admin")
@@ -287,7 +299,12 @@ exports.config = {
     //====================== afterEach()
     afterTest:async function(test, context, { error, result, duration, passed, retries }) {
         // await hp.logoutFromApplication()
+        if (error) {
+            await browser.takeScreenshot();
+        }
         console.log("logout from the apllication");
+
+
     },
 
 
